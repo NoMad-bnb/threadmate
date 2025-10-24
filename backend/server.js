@@ -11,13 +11,28 @@ app.get("/", (req, res) => {
   res.json({ message: "ThreadMate backend is running successfully 🚀" });
 });
 
+import fetch from "node-fetch";
+
 app.post("/api/generate", async (req, res) => {
   const { prompt = "" } = req.body || {};
-  const cleaned = String(prompt).trim();
-  const mock = cleaned
-    ? `Draft:\n${cleaned}\n\nImproved:\n${cleaned} ✅`
-    : "Send a prompt text";
-  res.json({ result: mock });
-});
+  if (!prompt.trim()) return res.json({ result: "Send a prompt text" });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  try {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/HuggingFaceTB/SmolLM3-3B",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.HF_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ inputs: prompt })
+      }
+    );
+    const data = await response.json();
+    const text = Array.isArray(data) ? data[0]?.generated_text || "No output" : data?.generated_text || "No output";
+    res.json({ result: text });
+  } catch (e) {
+    res.json({ result: "Error generating text" });
+  }
+});
