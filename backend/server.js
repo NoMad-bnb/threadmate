@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import pkg from "node-fetch";
-const fetch = pkg.default;
 
 const app = express();
 const PORT = process.env.PORT || 3001;
