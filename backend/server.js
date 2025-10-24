@@ -38,4 +38,18 @@ app.post("/api/generate", async (req, res) => {
     let outputText = "No output";
 
     if (Array.isArray(data) && data[0]?.generated_text) {
-      outputText = data
+      outputText = data[0].generated_text;
+    } else if (data.error) {
+      outputText = `Model Error: ${data.error}`;
+    } else {
+      outputText = JSON.stringify(data);
+    }
+
+    res.json({ result: outputText });
+  } catch (error) {
+    console.error("Error:", error);
+    res.json({ result: "Error generating text" });
+  }
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
