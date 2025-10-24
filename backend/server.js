@@ -19,7 +19,7 @@ app.post("/api/generate", async (req, res) => {
 
   try {
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
+      "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct",
       {
         method: "POST",
         headers: {
@@ -30,24 +30,15 @@ app.post("/api/generate", async (req, res) => {
       }
     );
 
-    const data = await response.json();
-    console.log("Full HF response:", JSON.stringify(data, null, 2));
+    const text = await response.text();
+    console.log("Raw HF response:", text);
 
-    let outputText = "No output";
-
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      outputText = data[0].generated_text;
-    } else if (data.error) {
-      outputText = `Model Error: ${data.error}`;
-    } else {
-      outputText = JSON.stringify(data);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return res.json({ result: "Model response invalid" });
     }
 
-    res.json({ result: outputText });
-  } catch (error) {
-    console.error("Error:", error);
-    res.json({ result: "Error generating text" });
-  }
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    let outputText = "No output";
+    if (Arr
