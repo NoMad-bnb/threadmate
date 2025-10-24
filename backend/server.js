@@ -33,23 +33,9 @@ app.post("/api/generate", async (req, res) => {
     );
 
     const data = await response.json();
-    console.log("HF response:", data);
+    console.log("Full HF response:", JSON.stringify(data, null, 2));
 
     let outputText = "No output";
 
     if (Array.isArray(data) && data[0]?.generated_text) {
-      outputText = data[0].generated_text;
-    } else if (data.error) {
-      outputText = `Model Error: ${data.error}`;
-    } else {
-      outputText = JSON.stringify(data);
-    }
-
-    res.json({ result: outputText });
-  } catch (error) {
-    console.error("Error:", error);
-    res.json({ result: "Error generating text" });
-  }
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+      outputText = data
