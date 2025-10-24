@@ -19,7 +19,7 @@ app.post("/api/generate", async (req, res) => {
 
   try {
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct",
+     "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-V3",
       {
         method: "POST",
         headers: {
