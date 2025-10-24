@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import pkg from "node-fetch";
+const fetch = pkg.default;
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,8 +12,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.json({ message: "ThreadMate backend is running successfully 🚀" });
 });
-
-import fetch from "node-fetch";
 
 app.post("/api/generate", async (req, res) => {
   const { prompt = "" } = req.body || {};
@@ -36,3 +36,5 @@ app.post("/api/generate", async (req, res) => {
     res.json({ result: "Error generating text" });
   }
 });
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
