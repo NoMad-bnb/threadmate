@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// اختبار المتغير البيئي
 console.log("HF_API_KEY:", process.env.HF_API_KEY ? "FOUND" : "MISSING");
 
 app.get("/", (req, res) => {
@@ -32,11 +31,23 @@ app.post("/api/generate", async (req, res) => {
         body: JSON.stringify({ inputs: prompt, options: { wait_for_model: true } })
       }
     );
+
     const data = await response.json();
-    console.log("HF response:", data); // لتسجيل الاستجابة
-    res.json({ result: JSON.stringify(data) });
-  } catch (e) {
-    console.error(e);
+    console.log("HF response:", data);
+
+    let outputText = "No output";
+
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      outputText = data[0].generated_text;
+    } else if (data.error) {
+      outputText = `Model Error: ${data.error}`;
+    } else {
+      outputText = JSON.stringify(data);
+    }
+
+    res.json({ result: outputText });
+  } catch (error) {
+    console.error("Error:", error);
     res.json({ result: "Error generating text" });
   }
 });
