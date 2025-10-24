@@ -33,23 +33,8 @@ app.post("/api/generate", async (req, res) => {
     const text = await response.text();
     console.log("Raw HF response:", text);
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      return res.json({ result: "Model response invalid" });
-    }
-
-    let outputText = "No output";
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      outputText = data[0].generated_text;
-    } else if (data.error) {
-      outputText = `Model Error: ${data.error}`;
-    } else {
-      outputText = JSON.stringify(data);
-    }
-
-    res.json({ result: outputText });
+    // Directly return the raw text instead of forcing JSON parsing
+    res.json({ result: text });
   } catch (error) {
     console.error("Error:", error);
     res.json({ result: "Error generating text" });
