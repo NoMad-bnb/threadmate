@@ -33,8 +33,8 @@ app.post("/api/generate", async (req, res) => {
       }
     );
     const data = await response.json();
-    const text = Array.isArray(data) ? data[0]?.generated_text || "No output" : data?.generated_text || "No output";
-    res.json({ result: text });
+    console.log("HF response:", data); // لتسجيل الاستجابة
+    res.json({ result: JSON.stringify(data) });
   } catch (e) {
     console.error(e);
     res.json({ result: "Error generating text" });
