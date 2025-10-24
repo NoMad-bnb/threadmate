@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// اختبار المتغير البيئي
+console.log("HF_API_KEY:", process.env.HF_API_KEY ? "FOUND" : "MISSING");
+
 app.get("/", (req, res) => {
   res.json({ message: "ThreadMate backend is running successfully 🚀" });
 });
