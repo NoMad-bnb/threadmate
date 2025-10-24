@@ -29,13 +29,14 @@ app.post("/api/generate", async (req, res) => {
           "Authorization": `Bearer ${process.env.HF_API_KEY}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ inputs: prompt })
+        body: JSON.stringify({ inputs: prompt, options: { wait_for_model: true } })
       }
     );
     const data = await response.json();
     const text = Array.isArray(data) ? data[0]?.generated_text || "No output" : data?.generated_text || "No output";
     res.json({ result: text });
   } catch (e) {
+    console.error(e);
     res.json({ result: "Error generating text" });
   }
 });
