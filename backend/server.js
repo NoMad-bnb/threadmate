@@ -19,7 +19,7 @@ app.post("/api/generate", async (req, res) => {
 
   try {
     const response = await fetch(
-    "https://api-inference.huggingface.co/models/google/flan-t5-base",
+    "https://api-inference.huggingface.co/models/katanemo/Arch-Router-1.5B",
       {
         method: "POST",
         headers: {
